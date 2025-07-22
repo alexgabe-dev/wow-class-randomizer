@@ -186,7 +186,11 @@ export default function WoWClassRandomizer() {
           <h1 className="bebas text-4xl md:text-8xl font-bold text-white mb-2 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
             Kalandor Kerék
           </h1>
-          <p className="text-lg text-zinc-400 mb-8">Project-Epoch Class Sorsoló - A Kalimdori Kalandorok guild jóvoltából</p>
+          <p className="text-lg text-zinc-400 mb-8">
+            Project-Epoch Class Sorsoló - A
+            <span className="legendary-hover font-semibold transition-colors duration-200 cursor-pointer"> Kalimdori Kalandorok </span>
+            guild jóvoltából
+          </p>
 
           {/* Randomize Button */}
           <Button

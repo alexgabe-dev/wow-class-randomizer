@@ -10,6 +10,11 @@ body {
   font-family: 'Bebas Neue', Arial, Helvetica, sans-serif;
 }
 
+.legendary-hover:hover {
+  color: #ff8000;
+  text-shadow: 0 0 8px #ff8000cc, 0 0 2px #fff2;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
