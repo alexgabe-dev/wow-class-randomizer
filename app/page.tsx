@@ -27,7 +27,7 @@ const classicClasses = [
   {
     name: "Mage",
     roles: ["DPS"],
-    description: "Egy igazi glass cannon kaszt arcane, fire és frost spellekkel.",
+    description: "Egy igazi glass cannon - arcane, fire és frost spellekkel.",
     color: "#69CCF0",
     bgColor: "",
     borderColor: "",
