@@ -6,6 +6,10 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.bebas {
+  font-family: 'Bebas Neue', Arial, Helvetica, sans-serif;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

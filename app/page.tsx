@@ -11,7 +11,7 @@ const classicClasses = [
   {
     name: "Druid",
     roles: ["Tank", "Healer", "DPS"],
-    description: "Masters of nature who can shapeshift into animal forms.",
+    description: "Hybrid kaszt shapeshift formákkal és több spec lehetőséggel.",
     color: "#FF7D0A",
     bgColor: "",
     borderColor: "",
@@ -19,7 +19,7 @@ const classicClasses = [
   {
     name: "Hunter",
     roles: ["DPS"],
-    description: "Ranged fighters with loyal animal companions.",
+    description: "Ranged DPS pet támogatással és trap alapú kontrollal.",
     color: "#ABD473",
     bgColor: "",
     borderColor: "",
@@ -27,7 +27,7 @@ const classicClasses = [
   {
     name: "Mage",
     roles: ["DPS"],
-    description: "Powerful spellcasters wielding arcane, fire, and frost magic.",
+    description: "Egy igazi glass cannon kaszt arcane, fire és frost spellekkel.",
     color: "#69CCF0",
     bgColor: "",
     borderColor: "",
@@ -35,7 +35,7 @@ const classicClasses = [
   {
     name: "Paladin",
     roles: ["Tank", "Healer", "DPS"],
-    description: "Holy warriors combining martial skill with divine magic.",
+    description: "Plate viselő hybrid, holy magic és aura supporttal.",
     color: "#F58CBA",
     bgColor: "",
     borderColor: "",
@@ -43,7 +43,7 @@ const classicClasses = [
   {
     name: "Priest",
     roles: ["Healer", "DPS"],
-    description: "Devoted healers who can also wield shadow magic.",
+    description: "Healer kaszt holy és shadow speccel is elérhető.",
     color: "#FFFFFF",
     bgColor: "",
     borderColor: "",
@@ -51,7 +51,7 @@ const classicClasses = [
   {
     name: "Rogue",
     roles: ["DPS"],
-    description: "Stealthy assassins who strike from the shadows.",
+    description: "Stealth-alapú melee DPS combo pont rendszerrel.",
     color: "#FFF569",
     bgColor: "",
     borderColor: "",
@@ -59,7 +59,7 @@ const classicClasses = [
   {
     name: "Shaman",
     roles: ["Healer", "DPS"],
-    description: "Spiritual guides who commune with the elements.",
+    description: "Totemhasználó hibrid kaszt elemental és enhancement speccel.",
     color: "#0070DE",
     bgColor: "",
     borderColor: "",
@@ -67,7 +67,7 @@ const classicClasses = [
   {
     name: "Warlock",
     roles: ["DPS"],
-    description: "Dark spellcasters who command demonic powers.",
+    description: "Caster, aki DoT-okat, démonokat és curses-t használ.",
     color: "#9482C9",
     bgColor: "",
     borderColor: "",
@@ -75,12 +75,13 @@ const classicClasses = [
   {
     name: "Warrior",
     roles: ["Tank", "DPS"],
-    description: "Mighty fighters excelling in melee combat.",
+    description: "Melee kaszt rage alapú tank és DPS speccel.",
     color: "#C79C6E",
     bgColor: "",
     borderColor: "",
   },
 ]
+
 
 const getRoleIcon = (role: string) => {
   switch (role) {
@@ -174,10 +175,18 @@ export default function WoWClassRandomizer() {
       <div className="container mx-auto px-4 py-12 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
-            Kalimdori Kalandorok
+          <div className="flex justify-center mb-6">
+            <img 
+              src="/logo/kalimdori-logo.png" 
+              alt="Kalimdori Kalandorok logó" 
+              className="max-w-xs w-full h-auto object-contain drop-shadow-lg" 
+              style={{ maxWidth: '240px' }}
+            />
+          </div>
+          <h1 className="bebas text-4xl md:text-8xl font-bold text-white mb-2 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
+            Kalandor Kerék
           </h1>
-          <p className="text-lg text-zinc-400 mb-8">WoW Classic Class Randomizer</p>
+          <p className="text-lg text-zinc-400 mb-8">Project-Epoch Class Sorsoló - A Kalimdori Kalandorok guild jóvoltából</p>
 
           {/* Randomize Button */}
           <Button
@@ -230,9 +239,21 @@ export default function WoWClassRandomizer() {
             >
               <div className="relative bg-zinc-900/90 rounded-2xl border-2 border-zinc-700 p-6 overflow-x-hidden overflow-y-visible w-full max-w-4xl mx-auto shadow-2xl backdrop-blur-md">
                 {/* Selection indicator */}
-                <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
-                  <div className="w-1 h-16 bg-red-500 rounded-full shadow-lg"></div>
-                  <div className="w-0 h-0 border-l-4 border-r-4 border-t-8 border-l-transparent border-r-transparent border-t-red-500 mx-auto"></div>
+                <div
+                  className="absolute z-30 flex flex-col items-center pointer-events-none"
+                  style={{
+                    top: '-36px', // hogy a háromszög hegye pontosan a doboz tetejéhez érjen
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                  }}
+                >
+                  {/* Vékony, extra hosszú csík */}
+                  <div className="w-1 h-28 bg-red-500 rounded-full shadow-lg" />
+                  {/* Nagyobb, árnyékos háromszög */}
+                  <div
+                    className="w-0 h-0 border-l-6 border-r-6 border-t-[18px] border-l-transparent border-r-transparent border-t-red-500"
+                    style={{ filter: "drop-shadow(0 2px 6px #000a)" }}
+                  />
                 </div>
 
                 {/* Scrolling classes */}
