@@ -1,5 +1,5 @@
-High-resolution circular class icons
+Square class icons
 Source: https://github.com/brutaliccus/ClassicWoWClassIcons_Circle_HighRes
 Revision: 8dba647722794b3af2892e11c2f0905c69619335
-Files: <class>/<class>hd.png, copied unchanged as ClassIcon_<class>.png.
-Resolution: 224 x 224 px; Shaman: 240 x 240 px. Transparent PNG.
+Files: <class>/wiki_<class>.png, copied unchanged as ClassIcon_<class>.png.
+Resolution: 130 x 130 px. Original square PNG variants; no upscaling or cropping.
