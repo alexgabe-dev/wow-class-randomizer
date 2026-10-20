@@ -1,12 +1,11 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Copy, Download, RotateCw, Volume2, VolumeX, Zap } from "lucide-react";
+import { Copy, Download, RotateCw } from "lucide-react";
 import { classes, randomIndex, iconPath, type Role } from "@/lib/classes";
 
 type Roll = {
   id: string;
   name: string;
-  player: string;
   line: string;
   date: string;
   roles: Role[];
@@ -36,8 +35,6 @@ function validRoll(value: unknown): value is Roll {
   return (
     !!c &&
     typeof r.id === "string" &&
-    typeof r.player === "string" &&
-    r.player.length <= 40 &&
     typeof r.line === "string" &&
     c.lines.includes(r.line) &&
     typeof r.date === "string" &&
@@ -48,10 +45,7 @@ function validRoll(value: unknown): value is Roll {
   );
 }
 export default function RollPage() {
-  const [player, setPlayer] = useState("");
-  const [sound, setSound] = useState(false),
-    [fast, setFast] = useState(false),
-    [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(false);
   const [history, setHistory] = useState<Roll[]>([]),
     [result, setResult] = useState<Roll | null>(null);
   const [busy, setBusy] = useState(false),
@@ -61,20 +55,26 @@ export default function RollPage() {
   const strip = useRef<HTMLDivElement>(null),
     lock = useRef(false),
     alive = useRef(true);
-  const animation = useRef<Animation | null>(null),
-    audio = useRef<AudioContext | null>(null);
+  const animation = useRef<Animation | null>(null);
   const pool = classes;
   useEffect(() => {
     alive.current = true;
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE) || "null");
       if (saved && typeof saved === "object") {
-        if (typeof saved.player === "string")
-          setPlayer(saved.player.slice(0, 40));
-        if (typeof saved.sound === "boolean") setSound(saved.sound);
-        if (typeof saved.fast === "boolean") setFast(saved.fast);
         if (Array.isArray(saved.history))
-          setHistory(saved.history.filter(validRoll).slice(0, 10));
+          setHistory(
+            saved.history
+              .filter(validRoll)
+              .slice(0, 10)
+              .map(({ id, name, line, date, roles }: Roll) => ({
+                id,
+                name,
+                line,
+                date,
+                roles,
+              })),
+          );
       }
     } catch {
       /* Unavailable or malformed storage uses defaults. */
@@ -83,20 +83,16 @@ export default function RollPage() {
     return () => {
       alive.current = false;
       animation.current?.cancel();
-      void audio.current?.close();
     };
   }, []);
   useEffect(() => {
     if (ready)
       try {
-        localStorage.setItem(
-          STORAGE,
-          JSON.stringify({ player, sound, fast, history }),
-        );
+        localStorage.setItem(STORAGE, JSON.stringify({ history }));
       } catch {
         /* Persistence is optional. */
       }
-  }, [ready, player, sound, fast, history]);
+  }, [ready, history]);
   async function spin() {
     if (lock.current || !strip.current) return;
     lock.current = true;
@@ -108,7 +104,6 @@ export default function RollPage() {
     const roll: Roll = {
       id: crypto.randomUUID(),
       name: chosen.name,
-      player: player.trim(),
       line: chosen.lines[randomIndex(chosen.lines.length)],
       date: new Date().toISOString(),
       roles: [...chosen.roles],
@@ -122,13 +117,6 @@ export default function RollPage() {
     node.style.transform = "translateX(-416px)";
     setReel(items);
     try {
-      if (sound)
-        try {
-          audio.current ??= new AudioContext();
-          await audio.current.resume();
-        } catch {
-          /* Sound never blocks a roll. */
-        }
       await new Promise<void>((resolve) =>
         requestAnimationFrame(() => resolve()),
       );
@@ -142,7 +130,7 @@ export default function RollPage() {
           { transform: `translateX(${end}px)` },
         ],
         {
-          duration: reduced ? 1 : fast ? 1400 : 4600,
+          duration: reduced ? 1 : 4600,
           easing: "cubic-bezier(.12,.68,.12,1)",
           fill: "forwards",
         },
@@ -158,24 +146,6 @@ export default function RollPage() {
       );
       await animation.current.finished;
       if (!alive.current) return;
-      if (sound && audio.current?.state === "running") {
-        const oscillator = audio.current.createOscillator(),
-          gain = audio.current.createGain();
-        oscillator.connect(gain);
-        gain.connect(audio.current.destination);
-        oscillator.frequency.setValueAtTime(660, audio.current.currentTime);
-        gain.gain.setValueAtTime(0.055, audio.current.currentTime);
-        gain.gain.exponentialRampToValueAtTime(
-          0.001,
-          audio.current.currentTime + 0.22,
-        );
-        oscillator.start();
-        oscillator.stop(audio.current.currentTime + 0.23);
-        oscillator.onended = () => {
-          oscillator.disconnect();
-          gain.disconnect();
-        };
-      }
       setResult(roll);
       setHistory((old) => [roll, ...old].slice(0, 10));
     } catch {
@@ -189,7 +159,7 @@ export default function RollPage() {
     if (!result) return;
     try {
       await navigator.clipboard.writeText(
-        `${result.player ? `${result.player}: ` : ""}${result.name} · ${result.roles.join(" / ")} — ${result.line} | Keep Calm & Roll · https://kcw.hu/roll`,
+        `${result.name} · ${result.roles.join(" / ")} — ${result.line} | Keep Calm & Roll · https://kcw.hu/roll`,
       );
       setNotice("Eredmény másolva. Mehet Discordra.");
     } catch {
@@ -228,9 +198,6 @@ export default function RollPage() {
       ctx.font = "25px Arial";
       ctx.fillStyle = "#ede9df";
       ctx.fillText(result.line, 600, 445, 1080);
-      ctx.font = "20px Arial";
-      ctx.fillStyle = "#a9b3c4";
-      ctx.fillText(result.player, 600, 495, 1080);
       ctx.font = "18px Arial";
       ctx.fillText(
         `kcw.hu/roll · ${new Date(result.date).toLocaleString("hu-HU")}`,
@@ -301,49 +268,12 @@ export default function RollPage() {
             <RotateCw size={18} className={busy ? "spinning" : ""} />
             {busy ? "Pörög…" : "Pörgetés"}
           </button>
-          <p className="pool-note">{pool.length} kaszt · egyenlő esélyek</p>
-          <div className="spin-options">
-            <button
-              aria-pressed={sound}
-              disabled={busy}
-              onClick={() => setSound(!sound)}
-            >
-              {sound ? <Volume2 size={16} /> : <VolumeX size={16} />}Hang{" "}
-              {sound ? "be" : "ki"}
-            </button>
-            <span aria-hidden="true">·</span>
-            <button
-              aria-pressed={fast}
-              disabled={busy}
-              onClick={() => setFast(!fast)}
-            >
-              <Zap size={16} />
-              Gyors pörgetés {fast ? "be" : "ki"}
-            </button>
-          </div>
         </section>
         <div className="below-wheel">
-          <label className="player-field">
-            <span>
-              Játékosnév <small>nem kötelező</small>
-            </span>
-            <input
-              value={player}
-              disabled={busy}
-              onChange={(e) => setPlayer(e.target.value)}
-              placeholder="Ahogy a guildben ismernek"
-              maxLength={40}
-              autoComplete="nickname"
-            />
-          </label>
           <div role="status" aria-live="polite" aria-atomic="true">
             {result && (
               <section className="result" aria-label="A sorsolás eredménye">
-                <p className="eyebrow">
-                  {result.player
-                    ? `${result.player}, ma ezzel mész`
-                    : "Ma ezzel mész"}
-                </p>
+                <p className="eyebrow">Ma ezzel mész</p>
                 <div className="result-class">
                   <Icon name={result.name} size={62} />
                   <div>
@@ -392,9 +322,6 @@ export default function RollPage() {
                     >
                       {r.name}
                     </strong>
-                    <span className="history-player">
-                      {r.player || "Névtelen"}
-                    </span>
                     <time dateTime={r.date}>
                       {new Date(r.date).toLocaleTimeString("hu-HU", {
                         hour: "2-digit",

@@ -227,65 +227,9 @@ h1 span {
 .spin-button:hover:enabled {
   background: #ccb681;
 }
-.pool-note {
-  color: var(--muted);
-  font-size: 11px;
-  margin: 13px 0 18px;
-  min-height: 16px;
-}
-.spin-options {
-  display: flex;
-  gap: 14px;
-  justify-content: center;
-  align-items: center;
-  color: #56627a;
-}
-.spin-options button {
-  border: 0;
-  background: none;
-  color: var(--muted);
-  display: flex;
-  gap: 7px;
-  align-items: center;
-  font-size: 12px;
-  min-height: 44px;
-}
-.spin-options button[aria-pressed="true"] {
-  color: var(--gold);
-}
 .below-wheel {
   max-width: 650px;
   margin: 30px auto 0;
-}
-.player-field {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-top: 22px;
-}
-.player-field > span {
-  font-size: 12px;
-}
-.player-field small {
-  display: block;
-  font-size: 10px;
-  color: var(--muted);
-  margin-top: 5px;
-}
-.player-field input {
-  max-width: 290px;
-  width: 58%;
-  min-height: 44px;
-  padding: 10px 12px;
-  background: #0e192a;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  color: var(--text);
-  font-size: 12px;
-}
-.player-field input::placeholder {
-  color: #7e8ba0;
 }
 .result {
   margin-top: 32px;
@@ -390,15 +334,8 @@ h1 span {
   font-weight: 500;
   width: 65px;
 }
-.history-player {
-  color: var(--muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1;
-  min-width: 0;
-}
 .history time {
+  margin-left: auto;
   font-size: 10px;
   color: var(--muted);
 }
@@ -449,12 +386,6 @@ footer span {
   }
   .below-wheel {
     margin-top: 25px;
-  }
-  .player-field input {
-    width: 60%;
-  }
-  .spin-options {
-    gap: 9px;
   }
   .result-actions button {
     flex: 1;
