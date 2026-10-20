@@ -495,11 +495,7 @@ footer span {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *:before,
-  *:after {
+  html {
     scroll-behavior: auto !important;
-    animation: none !important;
-    transition: none !important;
   }
 }

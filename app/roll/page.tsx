@@ -3,11 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { RotateCw } from "lucide-react";
 import { classes, randomIndex, iconPath, type Role } from "@/lib/classes";
 import { ForeverCountdown } from "@/components/forever-countdown";
-import {
-  reelKeyframes,
-  reducedReelKeyframes,
-  SPIN_DURATION,
-} from "@/lib/roll-animation";
+import { reelKeyframes, SPIN_DURATION } from "@/lib/roll-animation";
 
 type Roll = {
   id: string;
@@ -133,17 +129,13 @@ export default function RollPage() {
         requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
       );
       if (!alive.current) return;
-      const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches,
-        end = -TARGET * STEP;
+      const end = -TARGET * STEP;
       // The reel origin tracks 50% of its viewport; resize cannot move the winner.
-      animation.current = node.animate(
-        reduced ? reducedReelKeyframes(-416, end) : reelKeyframes(-416, end),
-        {
-          duration: reduced ? 360 : SPIN_DURATION,
-          easing: "linear",
-          fill: "forwards",
-        },
-      );
+      animation.current = node.animate(reelKeyframes(-416, end), {
+        duration: SPIN_DURATION,
+        easing: "linear",
+        fill: "forwards",
+      });
       await animation.current.finished;
       node.style.transform = `translateX(${end}px)`;
       animation.current.cancel();
@@ -151,14 +143,12 @@ export default function RollPage() {
       setWinner(TARGET);
       const winningIcon = node.children[TARGET].querySelector("img")!;
       animation.current = winningIcon.animate(
-        reduced
-          ? [{ opacity: 0.6 }, { opacity: 1 }]
-          : [
-              { transform: "scale(1)", offset: 0 },
-              { transform: "scale(1.2)", offset: 0.55 },
-              { transform: "scale(1.08)", offset: 1 },
-            ],
-        { duration: reduced ? 180 : 560, easing: "cubic-bezier(.22,1,.36,1)" },
+        [
+          { transform: "scale(1)", offset: 0 },
+          { transform: "scale(1.2)", offset: 0.55 },
+          { transform: "scale(1.08)", offset: 1 },
+        ],
+        { duration: 560, easing: "cubic-bezier(.22,1,.36,1)" },
       );
       await animation.current.finished;
       if (!alive.current) return;

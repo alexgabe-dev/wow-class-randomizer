@@ -33,13 +33,3 @@ export function reelKeyframes(start: number, end: number): Keyframe[] {
     };
   });
 }
-
-export function reducedReelKeyframes(start: number, end: number): Keyframe[] {
-  // Fade between positions rather than rapidly travelling across the screen.
-  return [
-    { transform: `translateX(${start}px)`, opacity: 1, offset: 0 },
-    { transform: `translateX(${start}px)`, opacity: 0, offset: 0.45 },
-    { transform: `translateX(${end}px)`, opacity: 0, offset: 0.5 },
-    { transform: `translateX(${end}px)`, opacity: 1, offset: 1 },
-  ];
-}

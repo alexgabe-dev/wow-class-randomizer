@@ -13,7 +13,7 @@ new Function(
     },
   }).outputText,
 )(exported);
-const { reelKeyframes, reducedReelKeyframes, SPIN_DURATION } = exported;
+const { reelKeyframes, SPIN_DURATION } = exported;
 const position = (frame) =>
   Number(frame.transform.match(/translateX\((.+)px\)/)[1]);
 
@@ -37,16 +37,4 @@ test("motion accelerates and then coasts gently to a stop", () => {
   assert.ok(speed(80) > speed(110));
   assert.ok(speed(120) < 0.01);
   assert.ok(SPIN_DURATION >= 5000);
-});
-
-test("reduced motion only changes position while invisible", () => {
-  const frames = reducedReelKeyframes(-416, -4576);
-  assert.equal(position(frames[0]), -416);
-  assert.equal(position(frames.at(-1)), -4576);
-  for (let i = 1; i < frames.length; i++) {
-    if (position(frames[i]) !== position(frames[i - 1])) {
-      assert.equal(frames[i - 1].opacity, 0);
-      assert.equal(frames[i].opacity, 0);
-    }
-  }
 });
