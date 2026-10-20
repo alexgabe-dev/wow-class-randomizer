@@ -13,6 +13,26 @@ export const metadata: Metadata = {
     siteName: "Keep Calm & Roll",
     locale: "hu_HU",
     type: "website",
+    images: [
+      {
+        url: "/thumb/thumbnail-kcw.png",
+        width: 1200,
+        height: 630,
+        type: "image/png",
+        alt: "Keep Calm & Wipe – Keep Calm & Roll kasztsorsoló",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Keep Calm & Roll | WoW Forever",
+    description: "Ma mivel menjek? WoW Forever kasztsorsoló.",
+    images: [
+      {
+        url: "/thumb/thumbnail-kcw.png",
+        alt: "Keep Calm & Wipe – Keep Calm & Roll kasztsorsoló",
+      },
+    ],
   },
 };
 export default function RootLayout({
