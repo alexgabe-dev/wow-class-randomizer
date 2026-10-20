@@ -1,26 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import {
-  ChevronDown,
-  Copy,
-  Download,
-  RotateCw,
-  Volume2,
-  VolumeX,
-  Zap,
-  Shield,
-  Heart,
-  Swords,
-  Crosshair,
-} from "lucide-react";
-import {
-  classes,
-  roles,
-  getPool,
-  randomIndex,
-  iconPath,
-  type Role,
-} from "@/lib/classes";
+import { Copy, Download, RotateCw, Volume2, VolumeX, Zap } from "lucide-react";
+import { classes, randomIndex, iconPath, type Role } from "@/lib/classes";
 
 type Roll = {
   id: string;
@@ -37,7 +18,6 @@ const initialReel = Array.from(
   { length: 17 },
   (_, i) => classes[i % classes.length],
 );
-const roleIcons = [Shield, Heart, Swords, Crosshair];
 function Icon({ name, size = 48 }: { name: string; size?: number }) {
   return (
     <img
@@ -68,8 +48,6 @@ function validRoll(value: unknown): value is Roll {
   );
 }
 export default function RollPage() {
-  const [selected, setSelected] = useState(classes.map((c) => c.name));
-  const [filters, setFilters] = useState<Role[]>([]);
   const [player, setPlayer] = useState("");
   const [sound, setSound] = useState(false),
     [fast, setFast] = useState(false),
@@ -85,20 +63,12 @@ export default function RollPage() {
     alive = useRef(true);
   const animation = useRef<Animation | null>(null),
     audio = useRef<AudioContext | null>(null);
-  const pool = getPool(selected, filters);
+  const pool = classes;
   useEffect(() => {
     alive.current = true;
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE) || "null");
       if (saved && typeof saved === "object") {
-        if (Array.isArray(saved.selected))
-          setSelected(
-            classes
-              .filter((c) => saved.selected.includes(c.name))
-              .map((c) => c.name),
-          );
-        if (Array.isArray(saved.filters))
-          setFilters(roles.filter((r) => saved.filters.includes(r)));
         if (typeof saved.player === "string")
           setPlayer(saved.player.slice(0, 40));
         if (typeof saved.sound === "boolean") setSound(saved.sound);
@@ -121,14 +91,14 @@ export default function RollPage() {
       try {
         localStorage.setItem(
           STORAGE,
-          JSON.stringify({ selected, filters, player, sound, fast, history }),
+          JSON.stringify({ player, sound, fast, history }),
         );
       } catch {
         /* Persistence is optional. */
       }
-  }, [ready, selected, filters, player, sound, fast, history]);
+  }, [ready, player, sound, fast, history]);
   async function spin() {
-    if (lock.current || !pool.length || !strip.current) return;
+    if (lock.current || !strip.current) return;
     lock.current = true;
     setBusy(true);
     setResult(null);
@@ -141,7 +111,7 @@ export default function RollPage() {
       player: player.trim(),
       line: chosen.lines[randomIndex(chosen.lines.length)],
       date: new Date().toISOString(),
-      roles: chosen.roles.filter((r) => !filters.length || filters.includes(r)),
+      roles: [...chosen.roles],
     };
     const items = Array.from(
       { length: TARGET + 8 },
@@ -244,7 +214,7 @@ export default function RollPage() {
       ctx.textAlign = "center";
       ctx.fillStyle = "#b9a16b";
       ctx.font = "22px Arial";
-      ctx.fillText("KEEP CALM AND WIPE · WOW FOREVER", 600, 66);
+      ctx.fillText("WOW FOREVER", 600, 66);
       ctx.fillStyle = "#ede9df";
       ctx.font = "38px Georgia";
       ctx.fillText("Keep Calm & Roll", 600, 125);
@@ -285,26 +255,20 @@ export default function RollPage() {
   return (
     <div className="roll-page">
       <header className="guild-header">
-        <a href="https://kcw.hu" aria-label="Keep Calm and Wipe főoldal">
+        <a href="https://kcw.hu" aria-label="Főoldal">
           <img
             className="guild-crest"
             src="/logo/kcw-crest.png"
-            alt="Keep Calm and Wipe címer"
+            alt="Guildcímer"
             width="58"
             height="58"
           />
-          <span>
-            <strong>Keep Calm and Wipe</strong>
-            <small>
-              WoW Forever <span> / </span> Guild kasztsorsoló
-            </small>
-          </span>
+          <span className="header-label">WoW Forever</span>
         </a>
         <span className="header-tag">/ roll</span>
       </header>
       <main>
         <section className="roll-hero" aria-labelledby="title">
-          <p className="eyebrow">KEEP CALM AND WIPE</p>
           <h1 id="title">
             Keep Calm <span>&</span> Roll
           </h1>
@@ -332,16 +296,12 @@ export default function RollPage() {
           <button
             className="spin-button"
             onClick={spin}
-            disabled={!ready || busy || !pool.length}
+            disabled={!ready || busy}
           >
             <RotateCw size={18} className={busy ? "spinning" : ""} />
             {busy ? "Pörög…" : "Pörgetés"}
           </button>
-          <p className="pool-note">
-            {!pool.length
-              ? "Válassz legalább egy kasztot a beállításokban."
-              : `${pool.length} kaszt · egyenlő esélyek`}
-          </p>
+          <p className="pool-note">{pool.length} kaszt · egyenlő esélyek</p>
           <div className="spin-options">
             <button
               aria-pressed={sound}
@@ -363,78 +323,6 @@ export default function RollPage() {
           </div>
         </section>
         <div className="below-wheel">
-          <details className="pool-settings">
-            <summary>
-              Miből sorsoljunk? <span>· {pool.length} kaszt</span>
-              <ChevronDown size={17} />
-            </summary>
-            <fieldset disabled={busy}>
-              <legend className="sr-only">Kasztok és szerepek</legend>
-              <div className="role-filters">
-                {roles.map((role, i) => {
-                  const RoleIcon = roleIcons[i];
-                  return (
-                    <button
-                      key={role}
-                      aria-pressed={filters.includes(role)}
-                      onClick={() =>
-                        setFilters((old) =>
-                          old.includes(role)
-                            ? old.filter((r) => r !== role)
-                            : [...old, role],
-                        )
-                      }
-                    >
-                      <RoleIcon size={16} />
-                      {role}
-                    </button>
-                  );
-                })}
-              </div>
-              <p className="filter-help">
-                {filters.length
-                  ? "A kijelölt szerepek bármelyike. Minden kaszt egyszer szerepel."
-                  : "Nincs szerepszűrés — minden szerep jöhet."}
-              </p>
-              <div className="selection-actions">
-                <button onClick={() => setSelected(classes.map((c) => c.name))}>
-                  Összes kijelölése
-                </button>
-                <button onClick={() => setSelected([])}>
-                  Kijelölés törlése
-                </button>
-              </div>
-              <div className="class-list">
-                {classes.map((c) => (
-                  <label
-                    key={c.name}
-                    className={
-                      pool.some((p) => p.name === c.name) ? "in-pool" : ""
-                    }
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selected.includes(c.name)}
-                      onChange={() =>
-                        setSelected((old) =>
-                          old.includes(c.name)
-                            ? old.filter((n) => n !== c.name)
-                            : [...old, c.name],
-                        )
-                      }
-                    />
-                    <Icon name={c.name} size={30} />
-                    <span>{c.name}</span>
-                  </label>
-                ))}
-              </div>
-              <p className="pool-summary">
-                {pool.length
-                  ? `${pool.length} kaszt a poolban · kasztonként ${(100 / pool.length).toLocaleString("hu-HU", { maximumFractionDigits: 1 })}% esély`
-                  : "Üres a pool. Jelölj ki kasztot, vagy módosítsd a szerepszűrést."}
-              </p>
-            </fieldset>
-          </details>
           <label className="player-field">
             <span>
               Játékosnév <small>nem kötelező</small>
@@ -520,9 +408,7 @@ export default function RollPage() {
           )}
         </div>
       </main>
-      <footer>
-        Keep Calm and Wipe <span>·</span> WoW Forever
-      </footer>
+      <footer>WoW Forever</footer>
     </div>
   );
 }

@@ -3,15 +3,14 @@ import "./globals.css";
 export const metadata: Metadata = {
   icons: { icon: "/logo/kcw-crest.png", apple: "/logo/kcw-crest.png" },
   metadataBase: new URL("https://kcw.hu"),
-  title: "Keep Calm & Roll | Keep Calm and Wipe",
-  description:
-    "Ma mivel menjek? A Keep Calm and Wipe guild WoW Forever kasztsorsolója.",
+  title: "Keep Calm & Roll | WoW Forever",
+  description: "Ma mivel menjek? WoW Forever kasztsorsoló.",
   alternates: { canonical: "/roll" },
   openGraph: {
     title: "Keep Calm & Roll",
-    description: "A Keep Calm and Wipe guild WoW Forever kasztsorsolója.",
+    description: "WoW Forever kasztsorsoló.",
     url: "/roll",
-    siteName: "Keep Calm and Wipe",
+    siteName: "Keep Calm & Roll",
     locale: "hu_HU",
     type: "website",
   },
