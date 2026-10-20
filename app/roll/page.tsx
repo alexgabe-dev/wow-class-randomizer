@@ -174,7 +174,7 @@ export default function RollPage() {
             width="58"
             height="58"
           />
-          <span className="header-label">WoW Forever</span>
+          <span className="header-label">Keep Calm and Wipe</span>
         </a>
         <ForeverCountdown />
         <a
@@ -263,7 +263,7 @@ export default function RollPage() {
           )}
         </div>
       </main>
-      <footer>WoW Forever</footer>
+      <footer>Keep Calm and Wipe</footer>
     </div>
   );
 }
