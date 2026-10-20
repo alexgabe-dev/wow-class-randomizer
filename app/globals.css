@@ -185,6 +185,7 @@ h1 span {
 .pointer {
   position: absolute;
   left: 50%;
+  transform: translateX(-50%);
   top: 0;
   bottom: 0;
   width: 1px;
@@ -195,7 +196,10 @@ h1 span {
   content: "";
   position: absolute;
   top: 0;
-  left: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 9px solid var(--gold);
@@ -204,7 +208,10 @@ h1 span {
   content: "";
   position: absolute;
   bottom: 0;
-  left: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-bottom: 7px solid var(--gold);
