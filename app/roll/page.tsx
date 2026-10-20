@@ -3,6 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import { RotateCw } from "lucide-react";
 import { classes, randomIndex, iconPath, type Role } from "@/lib/classes";
 import { ForeverCountdown } from "@/components/forever-countdown";
+import {
+  reelKeyframes,
+  reducedReelKeyframes,
+  SPIN_DURATION,
+} from "@/lib/roll-animation";
 
 type Roll = {
   id: string;
@@ -116,25 +121,26 @@ export default function RollPage() {
         { length: TARGET + 8 },
         () => pool[randomIndex(pool.length)],
       );
+      // Preserve the visible section while replacing the offscreen strip.
+      // A repeat spin starts from the previous winner without a visual jump.
+      const visibleStart = (winner ?? 4) - 4;
+      for (let i = 0; i < 9; i++) items[i] = reel[visibleStart + i] ?? items[i];
       items[TARGET] = chosen;
       const node = strip.current;
       node.style.transform = "translateX(-416px)";
       setReel(items);
       await new Promise<void>((resolve) =>
-        requestAnimationFrame(() => resolve()),
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
       );
       if (!alive.current) return;
       const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches,
         end = -TARGET * STEP;
       // The reel origin tracks 50% of its viewport; resize cannot move the winner.
       animation.current = node.animate(
-        [
-          { transform: "translateX(-416px)" },
-          { transform: `translateX(${end}px)` },
-        ],
+        reduced ? reducedReelKeyframes(-416, end) : reelKeyframes(-416, end),
         {
-          duration: reduced ? 1 : 4600,
-          easing: "cubic-bezier(.12,.68,.12,1)",
+          duration: reduced ? 360 : SPIN_DURATION,
+          easing: "linear",
           fill: "forwards",
         },
       );
@@ -143,9 +149,16 @@ export default function RollPage() {
       animation.current.cancel();
       if (!alive.current) return;
       setWinner(TARGET);
-      animation.current = node.children[TARGET].animate(
-        [{ scale: 1 }, { scale: 1.12 }, { scale: 1 }],
-        { duration: reduced ? 1 : 420, easing: "ease-in-out" },
+      const winningIcon = node.children[TARGET].querySelector("img")!;
+      animation.current = winningIcon.animate(
+        reduced
+          ? [{ opacity: 0.6 }, { opacity: 1 }]
+          : [
+              { transform: "scale(1)", offset: 0 },
+              { transform: "scale(1.2)", offset: 0.55 },
+              { transform: "scale(1.08)", offset: 1 },
+            ],
+        { duration: reduced ? 180 : 560, easing: "cubic-bezier(.22,1,.36,1)" },
       );
       await animation.current.finished;
       if (!alive.current) return;
@@ -191,6 +204,9 @@ export default function RollPage() {
           <p className="hero-question">Na milyen class legyek?</p>
           <div
             className="wheel"
+            data-phase={
+              winner !== null ? "settled" : busy ? "spinning" : "idle"
+            }
             aria-label="Kasztsorsoló kerék"
             aria-busy={busy}
           >

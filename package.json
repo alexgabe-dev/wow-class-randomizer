@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "test:animation": "node --test tests/roll-animation.test.cjs",
     "typecheck": "tsc --noEmit",
     "build": "next build",
     "dev": "next dev",
