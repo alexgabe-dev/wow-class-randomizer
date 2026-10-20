@@ -74,7 +74,7 @@ export const classes: Class[] = [
   },
 ];
 export const iconPath = (name: string) =>
-  `/class_icons/ClassIcon_${name.toLowerCase()}.webp`;
+  `/class_icons/ClassIcon_${name.toLowerCase()}.png`;
 export const getPool = (selected: string[], filters: Role[]) =>
   classes.filter(
     (c) =>
