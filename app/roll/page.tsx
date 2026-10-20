@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { RotateCw } from "lucide-react";
+import { ChevronDown, RotateCw } from "lucide-react";
 import { classes, randomIndex, iconPath, type Role } from "@/lib/classes";
 import { ForeverCountdown } from "@/components/forever-countdown";
 import { reelKeyframes, SPIN_DURATION } from "@/lib/roll-animation";
+import { RollResult } from "@/components/roll-result";
 
 type Roll = {
   id: string;
@@ -58,6 +59,7 @@ export default function RollPage() {
     lock = useRef(false),
     alive = useRef(true);
   const animation = useRef<Animation | null>(null);
+  const spinButton = useRef<HTMLButtonElement>(null);
   const pool = classes;
   useEffect(() => {
     alive.current = true;
@@ -216,6 +218,7 @@ export default function RollPage() {
             </div>
           </div>
           <button
+            ref={spinButton}
             className="spin-button"
             onClick={spin}
             disabled={!ready || busy}
@@ -225,37 +228,17 @@ export default function RollPage() {
           </button>
         </section>
         <div className="below-wheel">
-          <div role="status" aria-live="polite" aria-atomic="true">
-            {result && (
-              <section className="result" aria-label="A sorsolás eredménye">
-                <p className="eyebrow">Ma ezzel mész</p>
-                <div className="result-class">
-                  <Icon name={result.name} size={62} />
-                  <div>
-                    <h2
-                      style={{
-                        color: classes.find((c) => c.name === result.name)!
-                          .color,
-                      }}
-                    >
-                      {result.name}
-                    </h2>
-                    <p>{result.roles.join(" · ")}</p>
-                  </div>
-                </div>
-                <p className="result-line">„{result.line}”</p>
-              </section>
-            )}
-          </div>
+          <RollResult result={result} returnFocusRef={spinButton} />
           <p className="notice" role="status">
             {notice}
           </p>
           {history.length > 0 && (
-            <section className="history">
-              <div className="history-heading">
-                <h2>Legutóbbi dobások</h2>
+            <details className="history">
+              <summary className="history-heading">
+                <span>Legutóbbi dobások</span>
                 <span>Utolsó {history.length}</span>
-              </div>
+                <ChevronDown size={16} aria-hidden="true" />
+              </summary>
               <ol>
                 {history.map((r) => (
                   <li key={r.id}>
@@ -276,7 +259,7 @@ export default function RollPage() {
                   </li>
                 ))}
               </ol>
-            </section>
+            </details>
           )}
         </div>
       </main>

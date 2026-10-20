@@ -362,6 +362,76 @@ h1 span {
   color: #d2d8e2;
   line-height: 1.6;
 }
+.result-dialog {
+  width: min(400px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px);
+  margin: auto;
+  padding: 36px 24px 24px;
+  border: 1px solid #b9a16b55;
+  border-radius: 18px;
+  background: linear-gradient(155deg, #16253b, #0c1626);
+  color: var(--text);
+  text-align: center;
+  overflow-y: auto;
+  box-shadow: 0 24px 90px #0008;
+}
+.result-dialog[open] {
+  animation: reveal-result 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.result-dialog::backdrop {
+  background: #030914bf;
+  backdrop-filter: blur(7px);
+}
+.result-dialog .eyebrow {
+  margin: 4px 0 27px;
+}
+.result-dialog .result-class {
+  flex-direction: column;
+  gap: 20px;
+}
+.result-dialog .result-class img {
+  width: 84px;
+  height: 84px;
+}
+.result-dialog h2 {
+  font-size: 32px;
+  margin: 0 0 12px;
+}
+.result-dialog .result-class p {
+  line-height: 1.8;
+}
+.result-dialog .result-line {
+  margin: 24px 0;
+}
+.result-dialog-close {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+}
+.result-dialog-close:hover {
+  color: var(--text);
+  background: #ffffff08;
+}
+.result-dialog-confirm {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid var(--gold);
+  border-radius: 7px;
+  background: var(--gold);
+  color: var(--navy);
+  font-weight: 700;
+}
+.result-dialog-confirm:hover {
+  background: #ccb681;
+}
 .notice {
   font-size: 12px;
   color: var(--gold);
@@ -374,21 +444,30 @@ h1 span {
 .history {
   margin-top: 32px;
   border-top: 1px solid var(--line);
-  padding-top: 22px;
 }
 .history-heading {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-}
-.history h2 {
+  gap: 12px;
+  min-height: 62px;
+  cursor: pointer;
+  list-style: none;
   font-size: 13px;
-  font-weight: 500;
-  margin: 0;
 }
-.history-heading > span {
+.history-heading::-webkit-details-marker {
+  display: none;
+}
+.history-heading > span:nth-child(2) {
+  margin-left: auto;
   font-size: 10px;
   color: var(--muted);
+}
+.history-heading svg {
+  color: var(--gold);
+  transition: transform 200ms ease;
+}
+.history[open] .history-heading svg {
+  transform: rotate(180deg);
 }
 .history ol {
   padding: 0;
