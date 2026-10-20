@@ -264,28 +264,6 @@ h1 span {
   color: #d2d8e2;
   line-height: 1.6;
 }
-.result-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-}
-.result-actions button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 11px 15px;
-  min-height: 44px;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  background: transparent;
-  color: var(--text);
-  font-size: 12px;
-}
-.result-actions button:hover {
-  border-color: var(--gold);
-}
 .notice {
   font-size: 12px;
   color: var(--gold);
@@ -386,9 +364,6 @@ footer span {
   }
   .below-wheel {
     margin-top: 25px;
-  }
-  .result-actions button {
-    flex: 1;
   }
   .result h2 {
     font-size: 26px;

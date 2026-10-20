@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Copy, Download, RotateCw } from "lucide-react";
+import { RotateCw } from "lucide-react";
 import { classes, randomIndex, iconPath, type Role } from "@/lib/classes";
 
 type Roll = {
@@ -155,70 +155,6 @@ export default function RollPage() {
       if (alive.current) setBusy(false);
     }
   }
-  async function copyResult() {
-    if (!result) return;
-    try {
-      await navigator.clipboard.writeText(
-        `${result.name} · ${result.roles.join(" / ")} — ${result.line} | Keep Calm & Roll · https://kcw.hu/roll`,
-      );
-      setNotice("Eredmény másolva. Mehet Discordra.");
-    } catch {
-      setNotice(
-        "A másolás nem sikerült. A böngésző nem engedi a vágólap elérését.",
-      );
-    }
-  }
-  async function savePng() {
-    if (!result) return;
-    const c = classes.find((c) => c.name === result.name)!;
-    try {
-      const canvas = document.createElement("canvas");
-      canvas.width = 1200;
-      canvas.height = 630;
-      const ctx = canvas.getContext("2d")!;
-      const image = new Image();
-      image.src = iconPath(result.name);
-      await image.decode();
-      ctx.fillStyle = "#0b1423";
-      ctx.fillRect(0, 0, 1200, 630);
-      ctx.textAlign = "center";
-      ctx.fillStyle = "#b9a16b";
-      ctx.font = "22px Arial";
-      ctx.fillText("WOW FOREVER", 600, 66);
-      ctx.fillStyle = "#ede9df";
-      ctx.font = "38px Georgia";
-      ctx.fillText("Keep Calm & Roll", 600, 125);
-      ctx.drawImage(image, 552, 165, 96, 96);
-      ctx.fillStyle = c.color;
-      ctx.font = "bold 54px Arial";
-      ctx.fillText(result.name, 600, 330);
-      ctx.fillStyle = "#a9b3c4";
-      ctx.font = "23px Arial";
-      ctx.fillText(result.roles.join(" · "), 600, 375);
-      ctx.font = "25px Arial";
-      ctx.fillStyle = "#ede9df";
-      ctx.fillText(result.line, 600, 445, 1080);
-      ctx.font = "18px Arial";
-      ctx.fillText(
-        `kcw.hu/roll · ${new Date(result.date).toLocaleString("hu-HU")}`,
-        600,
-        575,
-      );
-      const blob = await new Promise<Blob | null>((resolve) =>
-        canvas.toBlob(resolve, "image/png"),
-      );
-      if (!blob) throw new Error("PNG");
-      const url = URL.createObjectURL(blob),
-        link = document.createElement("a");
-      link.href = url;
-      link.download = `kcw-roll-${result.name.toLowerCase()}-${result.id}.png`;
-      link.click();
-      requestAnimationFrame(() => URL.revokeObjectURL(url));
-      setNotice("A PNG elkészült.");
-    } catch {
-      setNotice("A képet nem sikerült menteni. Próbáld újra.");
-    }
-  }
   return (
     <div className="roll-page">
       <header className="guild-header">
@@ -239,7 +175,7 @@ export default function RollPage() {
           <h1 id="title">
             Keep Calm <span>&</span> Roll
           </h1>
-          <p className="hero-question">Ma mivel menjek?</p>
+          <p className="hero-question">Na milyen class legyek?</p>
           <div
             className="wheel"
             aria-label="Kasztsorsoló kerék"
@@ -289,16 +225,6 @@ export default function RollPage() {
                   </div>
                 </div>
                 <p className="result-line">„{result.line}”</p>
-                <div className="result-actions">
-                  <button onClick={copyResult}>
-                    <Copy size={16} />
-                    Másolás Discordra
-                  </button>
-                  <button onClick={savePng}>
-                    <Download size={16} />
-                    PNG mentése
-                  </button>
-                </div>
               </section>
             )}
           </div>
