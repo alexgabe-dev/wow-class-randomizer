@@ -100,23 +100,25 @@ export default function RollPage() {
     setResult(null);
     setNotice("");
     setWinner(null);
-    const chosen = pool[randomIndex(pool.length)];
-    const roll: Roll = {
-      id: crypto.randomUUID(),
-      name: chosen.name,
-      line: chosen.lines[randomIndex(chosen.lines.length)],
-      date: new Date().toISOString(),
-      roles: [...chosen.roles],
-    };
-    const items = Array.from(
-      { length: TARGET + 8 },
-      () => pool[randomIndex(pool.length)],
-    );
-    items[TARGET] = chosen;
-    const node = strip.current;
-    node.style.transform = "translateX(-416px)";
-    setReel(items);
     try {
+      const chosen = pool[randomIndex(pool.length)];
+      const roll: Roll = {
+        id: Array.from(crypto.getRandomValues(new Uint32Array(4)), (value) =>
+          value.toString(16).padStart(8, "0"),
+        ).join(""),
+        name: chosen.name,
+        line: chosen.lines[randomIndex(chosen.lines.length)],
+        date: new Date().toISOString(),
+        roles: [...chosen.roles],
+      };
+      const items = Array.from(
+        { length: TARGET + 8 },
+        () => pool[randomIndex(pool.length)],
+      );
+      items[TARGET] = chosen;
+      const node = strip.current;
+      node.style.transform = "translateX(-416px)";
+      setReel(items);
       await new Promise<void>((resolve) =>
         requestAnimationFrame(() => resolve()),
       );
