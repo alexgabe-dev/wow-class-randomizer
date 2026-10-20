@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { RotateCw } from "lucide-react";
 import { classes, randomIndex, iconPath, type Role } from "@/lib/classes";
+import { ForeverCountdown } from "@/components/forever-countdown";
 
 type Roll = {
   id: string;
@@ -160,7 +161,7 @@ export default function RollPage() {
   return (
     <div className="roll-page">
       <header className="guild-header">
-        <a href="https://kcw.hu" aria-label="Főoldal">
+        <a className="guild-brand" href="https://kcw.hu" aria-label="Főoldal">
           <img
             className="guild-crest"
             src="/logo/kcw-crest.png"
@@ -170,7 +171,17 @@ export default function RollPage() {
           />
           <span className="header-label">WoW Forever</span>
         </a>
-        <span className="header-tag">/ roll</span>
+        <ForeverCountdown />
+        <a
+          className="discord-link"
+          href="https://discord.gg/KhSjhDsrUS"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Csatlakozz a Discordhoz (új lapon nyílik)"
+          title="Csatlakozz a Discordhoz"
+        >
+          <span className="discord-icon" aria-hidden="true" />
+        </a>
       </header>
       <main>
         <section className="roll-hero" aria-labelledby="title">

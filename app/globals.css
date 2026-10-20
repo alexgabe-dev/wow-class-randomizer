@@ -68,15 +68,19 @@ a {
   margin: auto;
   height: 100px;
   padding: 0 32px;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  column-gap: 20px;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #26324888;
 }
-.guild-header a {
+.guild-brand {
   display: flex;
   gap: 14px;
   align-items: center;
+  justify-self: start;
+  min-width: 0;
 }
 .guild-crest {
   object-fit: contain;
@@ -86,10 +90,78 @@ a {
   color: var(--muted);
   font-size: 12px;
 }
-.header-tag {
-  color: #758196;
-  font-size: 12px;
-  letter-spacing: 2px;
+.discord-link {
+  justify-self: end;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #5865f244;
+  border-radius: 12px;
+  background: #5865f210;
+  color: #adb4ff;
+  transition:
+    color 0.18s,
+    background 0.18s,
+    border-color 0.18s;
+}
+.discord-link:hover {
+  color: #e0e3ff;
+  border-color: #8c96ff88;
+  background: #5865f22a;
+}
+.discord-icon {
+  width: 23px;
+  height: 23px;
+  background: currentColor;
+  mask: url("/icons/discord.svg") center / contain no-repeat;
+}
+.forever-countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.countdown-heading {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 1.7px;
+  text-transform: uppercase;
+}
+.countdown-digits {
+  display: flex;
+  gap: 17px;
+}
+.countdown-unit {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 26px;
+}
+.countdown-value {
+  color: #d0bc8e;
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.countdown-label {
+  color: #8693a9;
+  font-size: 9px;
+}
+.countdown-colon {
+  position: absolute;
+  left: -11px;
+  top: 0;
+  color: #657087;
+  font-size: 17px;
+  line-height: 1;
+}
+.countdown-launched {
+  min-height: 33px;
+  color: var(--gold);
+  font-size: 18px;
 }
 main {
   max-width: 880px;
@@ -344,15 +416,29 @@ footer span {
 }
 @media (max-width: 520px) {
   .guild-header {
-    height: 83px;
-    padding: 0 20px;
+    min-height: 146px;
+    height: auto;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 15px;
+    padding: 14px 20px 18px;
   }
   .guild-crest {
     width: 48px;
     height: 48px;
   }
-  .header-tag {
-    display: none;
+  .guild-brand {
+    gap: 10px;
+  }
+  .header-label {
+    font-size: 11px;
+  }
+  .forever-countdown {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .discord-link {
+    grid-column: 2;
+    grid-row: 1;
   }
   main {
     padding: 0 16px;
@@ -374,6 +460,19 @@ footer span {
   }
   .result h2 {
     font-size: 26px;
+  }
+}
+@media (min-width: 521px) and (max-width: 760px) {
+  .guild-header {
+    padding-inline: 20px;
+    column-gap: 12px;
+  }
+  .guild-brand {
+    gap: 8px;
+  }
+  .header-label {
+    max-width: 85px;
+    line-height: 1.5;
   }
 }
 @media (prefers-reduced-motion: reduce) {
